@@ -1,5 +1,6 @@
 class Simulator(val gameLength: Int = 10) {
     fun addRoll(roll: Int) {
+        if(!hasRoll()) return
         if (game.frames.count{it.isFinished} == gameLength){
             addBonusRoll(roll)
         } else {

@@ -21,10 +21,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import kotlin.random.Random
 
+private const val GAME_LENGTH = 10
+
 @Composable
 @Preview
 fun App() {
-    val simulator = Simulator(10)
+    val simulator = Simulator(GAME_LENGTH)
     val random = Random
     var game by remember { mutableStateOf(simulator.game)}
 
@@ -56,8 +58,13 @@ fun App() {
 @Composable
 fun ScoreBoard(game: Game, scorer: Scorer, parser: Parser) {
     Row {
-        repeat(10) {
-            Frame(scorer.scoreFrame(game, it), parser.getRepresentation(game.frames.getOrNull(it)))
+        repeat(GAME_LENGTH) {
+            val representation = if (it == GAME_LENGTH - 1){
+                parser.getRepresentation(game.frames.getOrNull(it), game.bonusRoll1, game.bonusRoll2)
+            } else {
+                parser.getRepresentation(game.frames.getOrNull(it))
+            }
+            Frame(scorer.scoreFrame(game, it), representation)
         }
         Total(scorer.scoreGame(game))
     }
